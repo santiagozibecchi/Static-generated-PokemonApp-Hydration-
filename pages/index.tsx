@@ -7,7 +7,7 @@ import { Layout } from "../components/layouts";
 const title = "Listado de Pokemons";
 
 const HomePage: NextPage = (props) => {
-   console.log(props);
+   console.log({ props });
    return (
       <Layout title={title}>
          <ul>
@@ -30,11 +30,17 @@ const HomePage: NextPage = (props) => {
 
 // ! Funcion que solo se ejecuta del lado del servidor y en build time
 // ! Solo se puede utilizar en las Pages, no es compatible con los componentes
+
+// ? Podemos leer fileSystem, base de datos, peticiones http mandado secret tokens
+
 export const getStaticProps: GetStaticProps = async (ctx) => {
    console.log("Hola mundo");
 
+   // ! Nada llega al cliente con execion de las props
    return {
-      props: {},
+      props: {
+         name: "Santiago",
+      },
    };
 };
 
