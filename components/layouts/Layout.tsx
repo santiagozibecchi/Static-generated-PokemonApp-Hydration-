@@ -7,6 +7,11 @@ interface Props {
    children?: ReactNode;
 }
 
+// * Static side generation:
+// Antes de que la persona haga una solicitud a
+// mi sitio web => yo ya se que se van a mostrar los 151 pokemons y nada mas
+// tod[o] para por la funcion getStaticProps -> se ejecuta del lado del server
+
 export const Layout: FC<PropsWithChildren<Props>> = ({ children, title }) => {
    return (
       <>
