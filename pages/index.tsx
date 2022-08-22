@@ -1,4 +1,5 @@
 import type { NextPage, GetStaticProps } from "next";
+import { pokeApi } from "../api";
 import { Layout } from "../components/layouts";
 
 // * getStaticProps
@@ -34,12 +35,12 @@ const HomePage: NextPage = (props) => {
 // ? Podemos leer fileSystem, base de datos, peticiones http mandado secret tokens
 
 export const getStaticProps: GetStaticProps = async (ctx) => {
-   console.log("Hola mundo");
+   const { data } = await pokeApi.get("/pokemon?limit=151");
 
    // ! Nada llega al cliente con execion de las props
    return {
       props: {
-         name: "Santiago",
+         pokemons: data.results,
       },
    };
 };
