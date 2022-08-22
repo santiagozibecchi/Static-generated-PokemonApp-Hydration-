@@ -1,23 +1,23 @@
 import type { NextPage, GetStaticProps } from "next";
 import { pokeApi } from "../api";
 import { Layout } from "../components/layouts";
+import { PokemonListResponse, SmallPokemon } from "../interfaces";
 
 // * getStaticProps
 // Cuando se esta haciendo el yarn build ya a la fn
 
-const title = "Listado de Pokemons";
+interface Props {
+   pokemons: SmallPokemon[];
+}
 
-const HomePage: NextPage = (props) => {
-   console.log({ props });
+const HomePage: NextPage<Props> = ({ pokemons }) => {
+   console.log(pokemons);
    return (
-      <Layout title={title}>
+      <Layout title="Listado de Pokemons">
          <ul>
-            <li>Pokemons</li>
-            <li>Pokemons</li>
-            <li>Pokemons</li>
-            <li>Pokemons</li>
-            <li>Pokemons</li>
-            <li>Pokemons</li>
+            {pokemons.map(({ name, id, img, url }) => (
+               <li key={url}>`${id} - ${name}`</li>
+            ))}
          </ul>
       </Layout>
    );
@@ -35,12 +35,29 @@ const HomePage: NextPage = (props) => {
 // ? Podemos leer fileSystem, base de datos, peticiones http mandado secret tokens
 
 export const getStaticProps: GetStaticProps = async (ctx) => {
-   const { data } = await pokeApi.get("/pokemon?limit=151");
+   const { data } = await pokeApi.get<PokemonListResponse>(
+      "/pokemon?limit=151"
+   );
+
+   const { results } = data;
+
+   // img = https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/132.svg
+
+   const pokemons: SmallPokemon[] = results.map(({ name, url }, index) => {
+      return {
+         name,
+         url,
+         id: index + 1,
+         img: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/${
+            index + 1
+         }.svg`,
+      };
+   });
 
    // ! Nada llega al cliente con execion de las props
    return {
       props: {
-         pokemons: data.results,
+         pokemons,
       },
    };
 };
