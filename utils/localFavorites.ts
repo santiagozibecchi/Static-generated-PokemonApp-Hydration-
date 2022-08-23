@@ -38,4 +38,9 @@ const existInFavorites = (id: number): boolean => {
    return favorites.includes(id);
 };
 
-export default { toggleFavorite, existInFavorites };
+// Obtener el arreglo de los id de los pokemons en LS
+const pokemons = (): number[] => {
+   return JSON.parse(localStorage.getItem("favorites") || "[]");
+};
+
+export default { toggleFavorite, existInFavorites, pokemons };
