@@ -1,17 +1,33 @@
-import { Button, Card, Container, Grid, Image, Text } from "@nextui-org/react";
+import { useEffect, useState } from "react";
 import { GetStaticProps, NextPage, GetStaticPaths } from "next";
+import { Button, Card, Container, Grid, Image, Text } from "@nextui-org/react";
 import { pokeApi } from "../../api";
 import { Layout } from "../../components/layouts";
 import { Pokemon } from "../../interfaces";
+import { localFavorites } from "../../utils";
 
 interface Props {
    pokemon: Pokemon;
 }
 
+// * Para saber si estamos corriendo codidgo del lado del servidor
+// clg({existWinwdown: typeof window})
+
 const PokemonPage: NextPage<Props> = ({ pokemon }) => {
-   // console.log(pokemon);
+   // Puedo realizarlo de esta manera porque el LS es sincrono, lo puedo leer en el preciso instante
+   const [isInFavorites, setIsInFavorites] = useState(false);
+
+   useEffect(() => {
+      setIsInFavorites(localFavorites.existInFavorites(pokemon.id));
+   }, [pokemon.id]);
+
+   const onToggleFavorite = () => {
+      localFavorites.toggleFavorite(pokemon.id);
+      setIsInFavorites(!isInFavorites);
+   };
+
    return (
-      <Layout title="Algun pokemon">
+      <Layout title={pokemon.name}>
          <Grid.Container css={{ marginTop: "5px" }} gap={2}>
             <Grid xs={12} sm={4}>
                <Card hoverable css={{ padding: "30px" }}>
@@ -41,8 +57,14 @@ const PokemonPage: NextPage<Props> = ({ pokemon }) => {
                         {pokemon.name}
                      </Text>
 
-                     <Button color="gradient" ghost>
-                        Guardar en Favoritos
+                     <Button
+                        onClick={onToggleFavorite}
+                        color="gradient"
+                        ghost={!isInFavorites}
+                     >
+                        {isInFavorites
+                           ? "En favoritos"
+                           : "Guardar en Favoritos"}
                      </Button>
                   </Card.Header>
 
