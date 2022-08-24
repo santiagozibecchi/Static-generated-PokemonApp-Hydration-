@@ -7,6 +7,9 @@ interface Props {
    children?: ReactNode;
 }
 
+const origin = typeof window === "undefined" ? "" : window.location.origin;
+// console.log({ origin });
+
 // * Static side generation:
 // Antes de que la persona haga una solicitud a
 // mi sitio web => yo ya se que se van a mostrar los 151 pokemons y nada mas
@@ -23,6 +26,13 @@ export const Layout: FC<PropsWithChildren<Props>> = ({ children, title }) => {
                content={`Informacion sobre el pokemon ${title}`}
             />
             <meta name="keywords" content={`${title}, pokemon, pokedex`} />
+
+            <meta property="og:title" content={`Informacion sobre ${title}`} />
+            <meta
+               property="og:description"
+               content={`Esta es la pagina sobre ${title}`}
+            />
+            <meta property="og:image" content={`${origin}/img/banner.png`} />
          </Head>
 
          <Navbar />
