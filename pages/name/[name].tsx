@@ -6,6 +6,7 @@ import confetti from "canvas-confetti";
 import { Layout } from "../../components/layouts";
 import { Button, Card, Container, Grid, Image, Text } from "@nextui-org/react";
 import { pokeApi } from "../../api";
+import { getPokemonInfo } from "../../utils/getPokemonInfo";
 
 interface Props {
    pokemon: Pokemon;
@@ -14,7 +15,6 @@ interface Props {
 const PokemonByNamePage: NextPage<Props> = ({ pokemon }) => {
    // Puedo realizarlo de esta manera porque el LS es sincrono, lo puedo leer en el preciso instante
    const [isInFavorites, setIsInFavorites] = useState(false);
-
 
    useEffect(() => {
       setIsInFavorites(localFavorites.existInFavorites(pokemon.id));
@@ -144,13 +144,8 @@ export const getStaticPaths: GetStaticPaths = async (ctx) => {
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
    const { name } = params as { name: string };
-   const { data } = await pokeApi.get<Pokemon>(`/pokemon/${name}`); // your fetch function here
 
-   const pokemon = {
-      sprites: data.sprites,
-      id: data.id,
-      name: data.name,
-   };
+   const pokemon = await getPokemonInfo(name);
 
    return {
       props: {
