@@ -158,10 +158,16 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 
    // console.log(ctx);
 
+   const pokemon = {
+      sprites: data.sprites,
+      id: data.id,
+      name: data.name,
+   };
+
    // Es recomendable solamente pasar la informacion con la cual se va a trabajar
    return {
       props: {
-         pokemon: data,
+         pokemon,
       },
    };
 };

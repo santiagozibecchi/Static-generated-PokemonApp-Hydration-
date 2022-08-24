@@ -15,7 +15,6 @@ const PokemonByNamePage: NextPage<Props> = ({ pokemon }) => {
    // Puedo realizarlo de esta manera porque el LS es sincrono, lo puedo leer en el preciso instante
    const [isInFavorites, setIsInFavorites] = useState(false);
 
-   console.log(pokemon);
 
    useEffect(() => {
       setIsInFavorites(localFavorites.existInFavorites(pokemon.id));
@@ -147,9 +146,15 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
    const { name } = params as { name: string };
    const { data } = await pokeApi.get<Pokemon>(`/pokemon/${name}`); // your fetch function here
 
+   const pokemon = {
+      sprites: data.sprites,
+      id: data.id,
+      name: data.name,
+   };
+
    return {
       props: {
-         pokemon: data,
+         pokemon,
       },
    };
 };
